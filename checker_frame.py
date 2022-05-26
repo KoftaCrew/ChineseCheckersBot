@@ -1,7 +1,5 @@
 import tkinter as tk
 
-from numpy import pad
-
 class CheckerCanvas(tk.Canvas):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
