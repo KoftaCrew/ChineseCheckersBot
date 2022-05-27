@@ -73,13 +73,111 @@ class CheckerCanvas(tk.Canvas):
         )
 
         linesY = height / 18
-        linesX = height / 14
+        linesX = width / 14
 
-        for i in range(2, 17):
+        for i in range(3):
             self.create_line(
-                0, linesY * i,
-                width, linesY * i
+                linesX * (7 - (i + 1) * 0.5), linesY * (i + 2),
+                linesX * (7 + (i + 1) * 0.5), linesY * (i + 2)
             )
+            
+        for i in range(5):
+            self.create_line(
+                linesX * (1 + i * 0.5), linesY * (i + 5),
+                linesX * (13 - i * 0.5), linesY * (i + 5)
+            )
+            
+        for i in range(4):
+            self.create_line(
+                linesX * (1 + i * 0.5), linesY * (13 - i),
+                linesX * (13 - i * 0.5), linesY * (13 - i)
+            )
+            
+        for i in range(3):
+            self.create_line(
+                linesX * (7 - (i + 1) * 0.5), linesY * (16 - i),
+                linesX * (7 + (i + 1) * 0.5), linesY * (16 - i)
+            )
+            
+        for i in range(3):
+            self.create_line(
+                linesX * (i + 2), linesY * 5,
+                linesX * (2 + (i - 1) * 0.5), linesY * (i + 6)
+            )
+            
+        for i in range(5):
+            self.create_line(
+                linesX * (i * 0.5 + 7), linesY * (i + 1),
+                linesX * (i + 1), linesY * 13
+            )
+            
+        for i in range(4):
+            self.create_line(
+                linesX * (i + 10), linesY * 5,
+                linesX * ((i * 0.5) + 5.5), linesY * (14 + i)
+            )
+            
+        for i in range(3):
+            self.create_line(
+                linesX * (i + 10), linesY * 13,
+                linesX * (12 + (i - 1) * 0.5), linesY * (10 + i)
+            )
+            
+        for i in range(3):
+            self.create_line(
+                linesX * (12 - i), linesY * 5,
+                linesX * (12 - (i - 1) * 0.5), linesY * (i + 6)
+            )
+            
+        for i in range(5):
+            self.create_line(
+                linesX * (7 - i * 0.5), linesY * (i + 1),
+                linesX * (13 - i), linesY * 13
+            )
+            
+        for i in range(4):
+            self.create_line(
+                linesX * (i + 1), linesY * 5,
+                linesX * ((i * 0.5) + 7), linesY * (17 - i)
+            )
+            
+        for i in range(3):
+            self.create_line(
+                linesX * (i + 2), linesY * 13,
+                linesX * (2 + (i - 1) * 0.5), linesY * (12 - i)
+            )
+            
+        for i in range(4):
+            for j in range(i + 1):
+                self.create_oval(
+                    linesX * (7 + j - i * 0.5) - linesX / 4, linesY * (i + 1) - linesX / 4,
+                    linesX * (7 + j - i * 0.5) + linesX / 4, linesY * (i + 1) + linesX / 4,
+                    fill='white'
+                )
+                
+        for i in range(5):
+            for j in range(13 - i):
+                self.create_oval(
+                    linesX * (1 + j + i * 0.5) - linesX / 4, linesY * (i + 5) - linesX / 4,
+                    linesX * (1 + j + i * 0.5) + linesX / 4, linesY * (i + 5) + linesX / 4,
+                    fill='white'
+                )
+                
+        for i in range(4):
+            for j in range(10 + i):
+                self.create_oval(
+                    linesX * (2.5 + j - i * 0.5) - linesX / 4, linesY * (i + 10) - linesX / 4,
+                    linesX * (2.5 + j - i * 0.5) + linesX / 4, linesY * (i + 10) + linesX / 4,
+                    fill='white'
+                )
+                
+        for i in range(4):
+            for j in range(i + 1):
+                self.create_oval(
+                    linesX * (7 + j - i * 0.5) - linesX / 4, linesY * (17 - i) - linesX / 4,
+                    linesX * (7 + j - i * 0.5) + linesX / 4, linesY * (17 - i) + linesX / 4,
+                    fill='white'
+                )
 
 
 class CheckerFrame(tk.Frame):
