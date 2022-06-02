@@ -9,15 +9,7 @@ def getPlayerColor(color: int) -> str:
     elif color == 1:
         return '#58af32'
     elif color == 2:
-        return '#1e7fc4'
-    elif color == 3:
-        return '#6d3b93'
-    elif color == 4:
         return '#e72633'
-    elif color == 5:
-        return '#ec6617'
-    elif color == 6:
-        return '#fdd318'
 
 class CheckerCanvas(tk.Canvas):
     gameState: GameState

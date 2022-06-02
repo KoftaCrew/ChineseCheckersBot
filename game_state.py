@@ -1,6 +1,3 @@
-from mimetypes import init
-
-
 class GameState:
     def __init__(self) -> None:
         self.map = {}
@@ -11,23 +8,23 @@ class GameState:
         # Blue
         for y in range(4):
             for x in range(4 - y):
-                self.map[(x, y)] = 2
+                self.map[(x, y)] = 0
         # Purple
         for y in range(4):
             for x in range(y + 1):
-                self.map[(x - y - 1), y + 5] = 3
+                self.map[(x - y - 1), y + 5] = 0
         # Red
         for y in range(4):
             for x in range(4 - y):
-                self.map[(x, y + 9)] = 4
+                self.map[(x, y + 9)] = 2
         # Orange
         for y in range(4):
             for x in range(y + 1):
-                self.map[(x - y + 8), y + 5] = 5
+                self.map[(x - y + 8), y + 5] = 0
         # Yellow
         for y in range(4):
             for x in range(4 - y):
-                self.map[(x+9, y)] = 6
+                self.map[(x+9, y)] = 0
         # White
         for y in range(5):
             for x in range(y + 5):

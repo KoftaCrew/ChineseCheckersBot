@@ -7,7 +7,7 @@ from game_state import GameState
 
 def ThreadFunction(checkers: CheckerFrame):
     gameState = checkers.canvas.gameState
-    moves = gameState.getAvailableMoves(3)
+    moves = gameState.getAvailableMoves(2)
     for m in moves:
         sleep(1)
         global stopThread
