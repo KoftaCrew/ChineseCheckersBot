@@ -3,6 +3,22 @@ import tkinter as tk
 from game_state import GameState
 
 
+def getPlayerColor(color: int) -> str:
+    if color == 0:
+        return 'white'
+    elif color == 1:
+        return '#58af32'
+    elif color == 2:
+        return '#1e7fc4'
+    elif color == 3:
+        return '#6d3b93'
+    elif color == 4:
+        return '#e72633'
+    elif color == 5:
+        return '#ec6617'
+    elif color == 6:
+        return '#fdd318'
+
 class CheckerCanvas(tk.Canvas):
     gameState: GameState
 
@@ -10,6 +26,8 @@ class CheckerCanvas(tk.Canvas):
         super().__init__(*args, **kwargs)
 
         self.gameState = None
+        self.pastEvent = None
+        self.circleMap = {}
         self.bind("<Configure>", self.redraw)
 
     def redraw(self, event):
@@ -152,25 +170,9 @@ class CheckerCanvas(tk.Canvas):
                 linesX * (2 + (i - 1) * 0.5), linesY * (12 - i)
             )
 
-        def getPlayerColor(color: int) -> str:
-            if color == 0:
-                return 'white'
-            elif color == 1:
-                return '#58af32'
-            elif color == 2:
-                return '#1e7fc4'
-            elif color == 3:
-                return '#6d3b93'
-            elif color == 4:
-                return '#e72633'
-            elif color == 5:
-                return '#ec6617'
-            elif color == 6:
-                return '#fdd318'
-
         for i in range(4):
             for j in range(i + 1):
-                self.create_oval(
+                self.circleMap[(j - i + 8, i - 4)] = self.create_oval(
                     linesX * (7 + j - i * 0.5) - linesX /
                     4, linesY * (i + 1) - linesX / 4,
                     linesX * (7 + j - i * 0.5) + linesX /
@@ -180,7 +182,7 @@ class CheckerCanvas(tk.Canvas):
 
         for i in range(5):
             for j in range(13 - i):
-                self.create_oval(
+                self.circleMap[(j, i)] = self.create_oval(
                     linesX * (1 + j + i * 0.5) - linesX /
                     4, linesY * (i + 5) - linesX / 4,
                     linesX * (1 + j + i * 0.5) + linesX /
@@ -190,7 +192,7 @@ class CheckerCanvas(tk.Canvas):
 
         for i in range(4):
             for j in range(10 + i):
-                self.create_oval(
+                self.circleMap[(j - i - 1, i + 5)] = self.create_oval(
                     linesX * (2.5 + j - i * 0.5) - linesX /
                     4, linesY * (i + 10) - linesX / 4,
                     linesX * (2.5 + j - i * 0.5) + linesX /
@@ -200,13 +202,18 @@ class CheckerCanvas(tk.Canvas):
 
         for i in range(4):
             for j in range(4 - i):
-                self.create_oval(
+                self.circleMap[(j, i + 9)] = self.create_oval(
                     linesX * (5.5 + j + i * 0.5) - linesX /
                     4, linesY * (14 + i) - linesX / 4,
                     linesX * (5.5 + j + i * 0.5) + linesX /
                     4, linesY * (14 + i) + linesX / 4,
                     fill=getPlayerColor(self.gameState.map[(j, i + 9)])
                 )
+                
+    def updateCircles(self) -> None:
+        for cords, circle in self.circleMap.items():
+            self.itemconfig(circle, fill= getPlayerColor(self.gameState.map[cords]))
+
 
 
 class CheckerFrame(tk.Frame):

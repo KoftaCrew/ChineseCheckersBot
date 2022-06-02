@@ -35,6 +35,80 @@ class GameState:
         for y in range(4):
             for x in range(8 - y):
                 self.map[(x, y + 5)] = 0
-
-    def getAvailableMoves(self, player: int) -> list:
-        pass
+    
+    def getAvailableMoves(self, currentPlayer: int) -> list:
+        result = []
+        map = self.map
+        
+        myMarbles = []
+        # Get marbles
+        for cord, player in map.items():
+            if player == currentPlayer:
+                myMarbles.append(cord)
+        
+        for x, y in myMarbles:
+            # Normal moves
+            if map.get((x, y - 1)) == 0:
+                result.append(self.moveMarble((x, y), (x, y - 1)))
+            if map.get((x + 1, y - 1)) == 0:
+                result.append(self.moveMarble((x, y), (x + 1, y - 1)))
+            if map.get((x - 1, y)) == 0:
+                result.append(self.moveMarble((x, y), (x - 1, y)))
+            if map.get((x + 1, y)) == 0:
+                result.append(self.moveMarble((x, y), (x + 1, y)))
+            if map.get((x - 1, y + 1)) == 0:
+                result.append(self.moveMarble((x, y), (x - 1, y + 1)))
+            if map.get((x, y + 1)) == 0:
+                result.append(self.moveMarble((x, y), (x, y + 1)))
+                
+            # Hop moves
+            visited = {(x,y)}
+            toVisit = set()
+            
+            if map.get((x, y - 1), 0) != 0 and map.get((x, y - 2)) == 0:
+                toVisit.add((x, y - 2))
+            if map.get((x + 1, y - 1), 0) != 0 and map.get((x + 2, y - 2)) == 0:
+                toVisit.add((x + 2, y - 2))
+            if map.get((x - 1, y), 0) != 0 and map.get((x - 2, y)) == 0:
+                toVisit.add((x - 2, y))
+            if map.get((x + 1, y), 0) != 0 and map.get((x + 2, y)) == 0:
+                toVisit.add((x + 2, y))
+            if map.get((x - 1, y + 1), 0) != 0 and map.get((x - 2, y + 2)) == 0:
+                toVisit.add((x - 2, y + 2))
+            if map.get((x, y + 1), 0) != 0 and map.get((x, y + 2)) == 0:
+                toVisit.add((x, y + 2))
+            
+            while len(toVisit) != 0:
+                m = toVisit.pop()
+                if m in visited:
+                    continue
+                
+                result.append(self.moveMarble((x, y), m))
+                visited.add(m)
+                x1, y1 = m
+                
+                if map.get((x1, y1 - 1), 0) != 0 and map.get((x1, y1 - 2)) == 0:
+                    toVisit.add((x1, y1 - 2))
+                if map.get((x1 + 1, y1 - 1), 0) != 0 and map.get((x1 + 2, y1 - 2)) == 0:
+                    toVisit.add((x1 + 2, y1 - 2))
+                if map.get((x1 - 1, y1), 0) != 0 and map.get((x1 - 2, y1)) == 0:
+                    toVisit.add((x1 - 2, y1))
+                if map.get((x1 + 1, y1), 0) != 0 and map.get((x1 + 2, y1)) == 0:
+                    toVisit.add((x1 + 2, y1))
+                if map.get((x1 - 1, y1 + 1), 0) != 0 and map.get((x1 - 2, y1 + 2)) == 0:
+                    toVisit.add((x1 - 2, y1 + 2))
+                if map.get((x1, y1 + 1), 0) != 0 and map.get((x1, y1 + 2)) == 0:
+                    toVisit.add((x1, y1 + 2))
+                    
+            
+        return result
+            
+            
+    def moveMarble(self, initial, next) -> 'GameState':
+        result = GameState()
+        result.map = self.map.copy()
+        temp = result.map[initial]
+        result.map[initial] = result.map[next]
+        result.map[next] = temp
+        
+        return result
