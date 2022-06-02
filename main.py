@@ -15,8 +15,9 @@ def getHeuristic(gameState, player: int):
                 mx = 0
                 for y in range(4):
                     for x in range(4 - y):
-                        dist = abs(p[0] - x) + abs(p[1] - (y + 9))
-                        mx = max(mx, dist)
+                        if gameState.map(x, y + 9) == 0:
+                            dist = abs(p[0] - x) + abs(p[1] - (y + 9))
+                            mx = max(mx, dist)
                 ret+= mx
     else:               # red player
         for p in gameState.map:
@@ -24,8 +25,9 @@ def getHeuristic(gameState, player: int):
                 mx = 0
                 for y in range(4):
                     for x in range(y + 1):
-                        dist = abs(p[0] - (x - y + 8)) + abs(p[1] - (y - 4))
-                        mx = max(mx, dist)
+                        if gameState.map(x - y + 8, y - 4):
+                            dist = abs(p[0] - (x - y + 8)) + abs(p[1] - (y - 4))
+                            mx = max(mx, dist)
                 ret+= mx
     return ret
 
