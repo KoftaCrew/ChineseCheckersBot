@@ -15,7 +15,7 @@ def getPlayerColor(color: int) -> str:
 class CheckerCanvas(tk.Canvas):
     gameState: GameState
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
         self.gameState = None
@@ -26,7 +26,7 @@ class CheckerCanvas(tk.Canvas):
         self.playerCallback = lambda: None
         self.bind("<Configure>", self.redraw)
 
-    def redraw(self, event):
+    def redraw(self, event) -> None:
         self.delete("all")
 
         width = event.width
@@ -216,7 +216,7 @@ class CheckerCanvas(tk.Canvas):
             self.itemconfig(circle, fill=getPlayerColor(
                 self.gameState.map[cords]))
 
-    def click(self, event):
+    def click(self, event) -> None:
         if not self.isClickable:
             return
 
@@ -257,7 +257,7 @@ class CheckerFrame(tk.Frame):
         self.canvas = CheckerCanvas(
             self, borderwidth=0, highlightthickness=0, **kwargs)
 
-    def redraw(self, event):
+    def redraw(self, event) -> None:
         padding = self.canvasPadding
         width = event.width - padding * 2
         height = event.height - padding * 2

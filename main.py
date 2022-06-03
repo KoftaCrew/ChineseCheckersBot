@@ -1,13 +1,14 @@
 from threading import Thread
 from time import sleep
 import tkinter as tk
+import tkinter.messagebox as msg
 from tkinter import ttk
 
 from checker_frame import CheckerFrame
 from game_state import GameState
 
 
-def centerWindow(window: tk.Tk, width=None, height=None):
+def centerWindow(window: tk.Tk, width=None, height=None) -> None:
     if width is None:
         width = window.winfo_reqwidth()
     if height is None:
@@ -23,10 +24,10 @@ class MainProgram:
     def __init__(self) -> None:
         self.initializeProgram()
 
-    def initializeProgram(self):
+    def initializeProgram(self) -> None:
         self.turn = 2
 
-    def run(self):
+    def run(self) -> None:
         self.openLevelDialog()
         if self.levelDiff == 0:
             return
@@ -59,12 +60,12 @@ class MainProgram:
         self.updateTurn()
         self.window.mainloop()
 
-    def newGame(self):
+    def newGame(self) -> None:
         self.window.destroy()
         self.initializeProgram()
         self.run()
 
-    def openLevelDialog(self):
+    def openLevelDialog(self) -> None:
         dialog = tk.Tk()
         dialog.title("Choose a difficulty")
 
@@ -79,10 +80,10 @@ class MainProgram:
         easy = ttk.Button(dialog, text="Easy", command=lambda: close(1))
         easy.pack(padx=10, pady=(10, 5))
 
-        medium = ttk.Button(dialog, text="Medium", command=lambda: close(2))
+        medium = ttk.Button(dialog, text="Medium", command=lambda: close(3))
         medium.pack(padx=10, pady=(10, 5))
 
-        hard = ttk.Button(dialog, text="Hard", command=lambda: close(3))
+        hard = ttk.Button(dialog, text="Hard", command=lambda: close(5))
         hard.pack(padx=10, pady=10)
 
         dialog.resizable(False, False)
@@ -90,15 +91,15 @@ class MainProgram:
         centerWindow(dialog)
         dialog.mainloop()
 
-    def updateDifficulty(self):
+    def updateDifficulty(self) -> None:
         if self.levelDiff == 1:
             self.difficultyLabel.config(text="Difficulty: Easy")
-        elif self.levelDiff == 2:
-            self.difficultyLabel.config(text="Difficulty: Medium")
         elif self.levelDiff == 3:
+            self.difficultyLabel.config(text="Difficulty: Medium")
+        elif self.levelDiff == 5:
             self.difficultyLabel.config(text="Difficulty: Hard")
 
-    def updateTurn(self):
+    def updateTurn(self) -> None:
         if self.turn == 1:
             self.turnLabel.config(text="AI turn")
             self.checkers.canvas.isClickable = False
@@ -106,19 +107,34 @@ class MainProgram:
             self.turnLabel.config(text="Your turn")
             self.checkers.canvas.isClickable = True
 
-    def playerCallback(self):
+    def playerCallback(self) -> None:
+        self.checkWins()
         self.turn = 1
         self.updateTurn()
-        AiThread = Thread(target= self.AiThread)
+        AiThread = Thread(target=self.AiThread)
         AiThread.start()
 
-    def AiThread(self):
-        # TODO Ai
-        print("hi")
-        sleep(5)
-        
+    def AiThread(self) -> None:
+        gameState = self.checkers.canvas.gameState
+        initial, next = gameState.alphaBetaSearch(self.levelDiff)
+        if initial is not None and next is not None:
+            self.checkers.canvas.gameState = gameState.moveMarble(initial, next)
+            self.checkers.canvas.updateCircles()
+
+        self.checkWins()
         self.turn = 2
         self.updateTurn()
+
+    def checkWins(self) -> None:
+        gameState = self.checkers.canvas.gameState
+        win = gameState.winCondition()
+
+        if win == 1:
+            msg.showinfo("Lost", "The AI has won!")
+            self.newGame()
+        elif win == 2:
+            msg.showinfo("Won", "You won!")
+            self.newGame()
 
 
 if __name__ == "__main__":
