@@ -13,9 +13,9 @@ def ThreadFunction(checkers: CheckerFrame):
         global stopThread
         if stopThread:
             return
-        
+
         checkers.canvas.gameState = m
-        print(m.getHeuristic(1))
+        print(m.getHeuristic())
         checkers.canvas.updateCircles()
 
 if __name__ == "__main__":
