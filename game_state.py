@@ -119,17 +119,24 @@ class GameState:
         return result
 
     def getHeuristic(self) -> int:
-        xr = 0
-        yr = 12
-        xg = 8
-        yg = -4
         HR = 0
         HG = 0
         for cords, p in self.map.items():
             if p == 1:
-                HG += abs(cords[0] - xr) + abs(cords[1] - yr)
+                mx = 0
+                for y in range(4):
+                    for x in range(4 - y):
+                        if self.map[(x, y + 9)] != 1:
+                            mx = max(mx, (x - cords[0]) * (x - cords[0]) + (y + 9 - cords[1]) * (y + 9 - cords[1]))
+                HG+= mx
             elif p == 2:
-                HR += abs(cords[0] - xg) + abs(cords[1] - yg)
+                mx = 0
+                for y in range(4):
+                    for x in range(y + 1):
+                        if self.map[(x - y + 8), y - 4] != 2:
+                            mx = max(mx, (x - y + 8 - cords[0]) * (x - y + 8 - cords[0]) + (y - 4 - cords[1]) * (y - 4 - cords[1]))
+                HR += mx
+
         return HR - HG
 
     def winCondition(self) -> int:
