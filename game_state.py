@@ -45,7 +45,8 @@ class GameState:
 
         for cords in myMarbles:
             moveCords = self.getMarbleMoves(cords)
-            result.extend([(self.moveMarble(cords, x), cords, x) for x in moveCords])
+            result.extend([(self.moveMarble(cords, x), cords, x)
+                           for x in moveCords])
 
         return result
 
@@ -129,7 +130,8 @@ class GameState:
                         if cords[1] > (y + 9):
                             continue
                         if self.map[(x, y + 9)] != 1:
-                            mx = max(mx, (x - cords[0]) * (x - cords[0]) + (y + 9 - cords[1]) * (y + 9 - cords[1]))
+                            mx = max(
+                                mx, (x - cords[0]) * (x - cords[0]) + (y + 9 - cords[1]) * (y + 9 - cords[1]))
                 HG += mx
             elif p == 2:
                 mx = 0
@@ -139,7 +141,7 @@ class GameState:
                             continue
                         if self.map[(x - y + 8), y - 4] != 2:
                             mx = max(mx, (x - y + 8 - cords[0]) * (x - y + 8 - cords[0]) + (y - 4 - cords[1]) * (
-                                        y - 4 - cords[1]))
+                                y - 4 - cords[1]))
                 HR += mx
 
         return HR - HG
@@ -177,7 +179,7 @@ class GameState:
 
     def alphaBetaSearch(self, depth: int) -> tuple[tuple[int, int], tuple[int, int]]:
         def minValue(state: GameState, alpha: int, beta: int, depth: int) -> tuple[
-            int, tuple[int, int], tuple[int, int]]:
+                int, tuple[int, int], tuple[int, int]]:
             win = state.winCondition()
             if win == 1:
                 return float('inf'), None, None
@@ -197,13 +199,13 @@ class GameState:
                     minNext = next
 
                 if v <= alpha:
-                    return v, initial, next
-                beta = min(v, alpha)
+                    return v, minInitial, minNext
+                beta = min(v, beta)
 
             return v, minInitial, minNext
 
         def maxValue(state: GameState, alpha: int, beta: int, depth: int) -> tuple[
-            int, tuple[int, int], tuple[int, int]]:
+                int, tuple[int, int], tuple[int, int]]:
             win = state.winCondition()
             if win == 1:
                 return float('inf'), None, None
@@ -223,12 +225,11 @@ class GameState:
                     maxNext = next
 
                 if v >= beta:
-                    return v, initial, next
+                    return v, maxInitial, maxNext
                 alpha = max(v, alpha)
 
             return v, maxInitial, maxNext
 
-        h, initial, next = maxValue(self, float('-inf'), float('inf'), depth)
-        print(h)
+        _, initial, next = maxValue(self, float('-inf'), float('inf'), depth)
 
         return initial, next

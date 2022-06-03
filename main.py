@@ -22,48 +22,53 @@ def centerWindow(window: tk.Tk, width=None, height=None) -> None:
 
 class MainProgram:
     def __init__(self) -> None:
+        self.window = None
+        self.newGameAsked = True
         self.initializeProgram()
 
     def initializeProgram(self) -> None:
         self.turn = 2
 
     def run(self) -> None:
-        self.openLevelDialog()
-        if self.levelDiff == 0:
-            return
+        while self.newGameAsked:
+            self.newGameAsked = False
 
-        self.window = tk.Tk()
-        self.window.title("Chinese Checker")
-        self.window.eval('tk::PlaceWindow . center')
+            self.openLevelDialog()
+            if self.levelDiff == 0:
+                return
 
-        self.window.minsize(800, 600)
+            self.window = tk.Tk()
+            self.window.title("Chinese Checker")
+            self.window.eval('tk::PlaceWindow . center')
 
-        self.checkers = CheckerFrame(self.window, background="white")
+            self.window.minsize(800, 600)
 
-        self.checkers.canvas.gameState = GameState()
-        self.checkers.canvas.playerCallback = self.playerCallback
+            self.checkers = CheckerFrame(self.window, background="white")
 
-        self.checkers.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
+            self.checkers.canvas.gameState = GameState()
+            self.checkers.canvas.playerCallback = self.playerCallback
 
-        self.turnLabel = ttk.Label(self.window)
-        self.turnLabel.pack(side=tk.TOP, padx=28, pady=(28, 0))
+            self.checkers.pack(fill=tk.BOTH, expand=True, side=tk.LEFT)
 
-        self.difficultyLabel = ttk.Label(self.window)
-        self.difficultyLabel.pack(side=tk.TOP, padx=28, pady=10)
+            self.turnLabel = ttk.Label(self.window)
+            self.turnLabel.pack(side=tk.TOP, padx=28, pady=(28, 0))
 
-        newGameButton = ttk.Button(
-            self.window, text="New game", command=self.newGame)
-        newGameButton.pack(side=tk.TOP, padx=10, pady=(28, 0))
+            self.difficultyLabel = ttk.Label(self.window)
+            self.difficultyLabel.pack(side=tk.TOP, padx=28, pady=10)
 
-        centerWindow(self.window, 800, 600)
-        self.updateDifficulty()
-        self.updateTurn()
-        self.window.mainloop()
+            newGameButton = ttk.Button(
+                self.window, text="New game", command=self.newGame)
+            newGameButton.pack(side=tk.TOP, padx=10, pady=(28, 0))
+
+            centerWindow(self.window, 800, 600)
+            self.updateDifficulty()
+            self.updateTurn()
+            self.window.mainloop()
 
     def newGame(self) -> None:
-        self.window.destroy()
         self.initializeProgram()
-        self.run()
+        self.newGameAsked = True
+        self.window.destroy()
 
     def openLevelDialog(self) -> None:
         dialog = tk.Tk()
@@ -108,9 +113,9 @@ class MainProgram:
             self.checkers.canvas.isClickable = True
 
     def playerCallback(self) -> None:
-        self.checkWins()
         self.turn = 1
         self.updateTurn()
+        self.checkWins()
         AiThread = Thread(target=self.AiThread)
         AiThread.start()
 
@@ -118,12 +123,13 @@ class MainProgram:
         gameState = self.checkers.canvas.gameState
         initial, next = gameState.alphaBetaSearch(self.levelDiff)
         if initial is not None and next is not None:
-            self.checkers.canvas.gameState = gameState.moveMarble(initial, next)
+            self.checkers.canvas.gameState = gameState.moveMarble(
+                initial, next)
             self.checkers.canvas.updateCircles()
 
-        self.checkWins()
         self.turn = 2
         self.updateTurn()
+        self.checkWins()
 
     def checkWins(self) -> None:
         gameState = self.checkers.canvas.gameState
