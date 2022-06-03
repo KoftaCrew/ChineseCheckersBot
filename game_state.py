@@ -173,14 +173,20 @@ class GameState:
                 return state.getHeuristic(), None, None
             
             v = float('inf')
+            minInitial = None
+            minNext = None
             for s, initial, next in state.getAvailableMoves(1):
-                v = min(v, maxValue(s, alpha, beta, depth - 1)[0])
+                h, _, _ = maxValue(s, alpha, beta, depth - 1)
+                if v > h:
+                    v = h
+                    minInitial = initial
+                    minNext = next
                 
                 if v <= alpha:
                     return v, initial, next
                 beta = min(v, alpha)
 
-            return v, initial, next
+            return v, minInitial, minNext
 
         def maxValue(state: GameState, alpha: int, beta: int, depth: int) -> tuple[int, tuple[int, int], tuple[int, int]]:
             if state.winCondition() == 1:
@@ -191,14 +197,20 @@ class GameState:
                 return state.getHeuristic(), None, None
             
             v = float('-inf')
+            maxInitial = None
+            maxNext = None
             for s, initial, next in state.getAvailableMoves(1):
-                v = max(v, minValue(s, alpha, beta, depth - 1)[0])
+                h, _, _ = minValue(s, alpha, beta, depth - 1)
+                if v < h:
+                    v = h
+                    maxInitial = initial
+                    maxNext = next
                 
                 if v >= beta:
                     return v, initial, next
                 alpha = max(v, alpha)
 
-            return v, initial, next
+            return v, maxInitial, maxNext
         
         h, initial, next = maxValue(self, float('-inf'), float('inf'), depth)
         print(h)
