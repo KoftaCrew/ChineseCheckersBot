@@ -11,6 +11,7 @@ def getPlayerColor(color: int) -> str:
     elif color == 2:
         return '#e72633'
 
+
 class CheckerCanvas(tk.Canvas):
     gameState: GameState
 
@@ -18,8 +19,11 @@ class CheckerCanvas(tk.Canvas):
         super().__init__(*args, **kwargs)
 
         self.gameState = None
-        self.pastEvent = None
+        self.isClickable = False
+        self.selected = None
+        self.availableMoves = []
         self.circleMap = {}
+        self.playerCallback = lambda: None
         self.bind("<Configure>", self.redraw)
 
     def redraw(self, event):
@@ -201,11 +205,46 @@ class CheckerCanvas(tk.Canvas):
                     4, linesY * (14 + i) + linesX / 4,
                     fill=getPlayerColor(self.gameState.map[(j, i + 9)])
                 )
-                
+
+        self.circles2Cords = {}
+        for cords, circle in self.circleMap.items():
+            self.circles2Cords[circle] = cords
+            self.tag_bind(circle, '<Button-1>', self.click)
+
     def updateCircles(self) -> None:
         for cords, circle in self.circleMap.items():
-            self.itemconfig(circle, fill= getPlayerColor(self.gameState.map[cords]))
+            self.itemconfig(circle, fill=getPlayerColor(
+                self.gameState.map[cords]))
 
+    def click(self, event):
+        if not self.isClickable:
+            return
+
+        clickedId = self.find_withtag("current")[0]
+        cords = self.circles2Cords[clickedId]
+
+        if self.selected is None or self.gameState.map[cords] == 2:
+            if self.gameState.map[cords] != 2:
+                return
+
+            self.selected = cords
+            self.availableMoves = self.gameState.getMarbleMoves(cords)
+            self.updateCircles()
+            for moveCords in self.availableMoves:
+                self.itemconfig(self.circleMap[moveCords], fill='#f6bfc0')
+
+        else:
+            moved = False
+            if cords in self.availableMoves:
+                self.gameState = self.gameState.moveMarble(
+                    self.selected, cords)
+                moved = True
+
+            self.selected = None
+            self.availableMoves.clear()
+            self.updateCircles()
+            if moved:
+                self.playerCallback()
 
 
 class CheckerFrame(tk.Frame):
