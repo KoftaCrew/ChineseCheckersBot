@@ -165,9 +165,10 @@ class GameState:
 
     def alphaBetaSearch(self, depth: int) -> tuple[tuple[int, int], tuple[int, int]]:
         def minValue(state: GameState, alpha: int, beta: int, depth: int) -> tuple[int, tuple[int, int], tuple[int, int]]:
-            if state.winCondition() == 1:
+            win = state.winCondition()
+            if win == 1:
                 return float('inf'), None, None
-            elif state.winCondition() == 2:
+            elif win == 2:
                 return float('-inf'), None, None
             elif depth == 0:
                 return state.getHeuristic(), None, None
@@ -189,9 +190,10 @@ class GameState:
             return v, minInitial, minNext
 
         def maxValue(state: GameState, alpha: int, beta: int, depth: int) -> tuple[int, tuple[int, int], tuple[int, int]]:
-            if state.winCondition() == 1:
+            win = state.winCondition()
+            if win == 1:
                 return float('inf'), None, None
-            elif state.winCondition() == 2:
+            elif win == 2:
                 return float('-inf'), None, None
             elif depth == 0:
                 return state.getHeuristic(), None, None
