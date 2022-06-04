@@ -191,7 +191,7 @@ class GameState:
             v = float('inf')
             minInitial = None
             minNext = None
-            for s, initial, next in state.getAvailableMoves(1):
+            for s, initial, next in state.getAvailableMoves(2):
                 h, _, _ = maxValue(s, alpha, beta, depth - 1)
                 if v > h:
                     v = h
