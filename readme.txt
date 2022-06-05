@@ -2,7 +2,7 @@ Kareem Mohamed Morsy Ismail       , ID: 20190386, Group: CS-S5, Program: CS, Ema
 David Emad Philip Ata-Allah       , ID: 20190191, Group: CS-S5, Program: CS, Email: davidemadphilip@gmail.com
 Mostafa Mahmoud Anwar Morsy Sadek , ID: 20190544, Group: CS-S5, Program: CS, Email: mostafamorsy22@gmail.com
 Mohamed Ashraf Mohamed Ali        , ID: 20190424, Group: CS-S5, Program: CS, Email: ashraf.dawood2295@gmail.com
-Mohamed Essam Beshier Mohamed     , ID: 20190461, Group: IS-S3, Program: IS, Email: messamb26@gmail.com
+Mohamed Essam Beshier Mohamed     , ID: 20190461, Group: IS-S3, Program: IS, Email: messamb26@gmail.com R.I.P. 
 
 Programming language used: Python
 GUI: Implemented with Tkinter (built-in)
